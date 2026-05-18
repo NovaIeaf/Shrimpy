@@ -12,6 +12,8 @@ SPEED_IN_PIXELS = 5
 FONT_SIZE = 600
 COLOR = "pink"
 RARE_COLOR = "orange"
+BOB_AMPLITUDE = 400
+BOB_SPEED = 0.2
 
 # ==================
 
@@ -49,9 +51,11 @@ def show_emoji(emoji, color):
     root.update()
 
     def animate():
-        nonlocal x
+        nonlocal x, angle
         x += SPEED_IN_PIXELS
-        canvas.coords(text, x, y)
+        current_y = base_y + int(BOB_AMPLITUDE * math.sin(angle))
+        angle += BOB_SPEED
+        canvas.coords(text, x, current_y)
 
         if x < screen_width + 200:
             root.after(16, animate)
