@@ -23,9 +23,9 @@ BOB_SPEED = 0.05
 def create_tray_icon():
     image = Image.new("RGBA", (64, 64), (0, 0, 0, 0))
     draw = ImageDraw.Draw(image)
-    font = ImageFont.truetype("seguiemj.ttf", 48)
+    font = ImageFont.truetype("seguiemj.ttf", 64)
 
-    draw.text((8, 4), EMOJI, font=font)
+    draw.text((-12, 4), EMOJI, font=font)
     return image
 
 def show_emoji(emoji, color):
@@ -86,7 +86,7 @@ icon = pystray.Icon(
     "Shrimpy",
     create_tray_icon(),
     "Shrimpy",
-    menu=pystray.Menu(item("Quit", lambda icon: icon.stop()))
+    menu=pystray.Menu(item("Catch🪝", lambda icon: icon.stop()))
 )
 
 threading.Thread(target=loop, daemon=True).start()
