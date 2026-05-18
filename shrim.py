@@ -9,12 +9,12 @@ import random
 EMOJI = "🦐"
 RARE_EMOIJ = "🍤"
 INTERVAL_MINUTES = 10
-SPEED_IN_PIXELS = 5
+SPEED_IN_PIXELS = 4
 FONT_SIZE = 600
 COLOR = "pink"
 RARE_COLOR = "orange"
-BOB_AMPLITUDE = 200
-BOB_SPEED = 0.1
+BOB_AMPLITUDE = 50
+BOB_SPEED = 0.05
 
 # ==================
 
