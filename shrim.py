@@ -4,10 +4,13 @@ import time
 import threading
 import math
 import random
+import pystray
+from pystray import MenuItem as item
+from PIL import Image, ImageDraw, ImageFont
 
 # ===== CONFIG =====
 EMOJI = "🦐"
-RARE_EMOIJ = "🍤"
+RARE_EMOJI = "🍤"
 INTERVAL_MINUTES = 10
 SPEED_IN_PIXELS = 4
 FONT_SIZE = 600
@@ -15,8 +18,15 @@ COLOR = "pink"
 RARE_COLOR = "orange"
 BOB_AMPLITUDE = 50
 BOB_SPEED = 0.05
-
 # ==================
+
+def create_tray_icon():
+    image = Image.new("RGBA", (64, 64), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(image)
+    font = ImageFont.truetype("seguiemj.ttf", 48)
+
+    draw.text((8, 4), EMOJI, font=font)
+    return image
 
 def show_emoji(emoji, color):
     root = tk.Tk()
@@ -29,29 +39,21 @@ def show_emoji(emoji, color):
 
     transparent_color = "white"
     root.configure(bg=transparent_color)
-
-    try:
-        root.attributes("-transparentcolor", transparent_color)
-    except:
-        print("Transparent color not supported on this system.")
-
+    root.attributes("-transparentcolor", transparent_color)
     canvas = tk.Canvas(root, width=screen_width, height=screen_height, highlightthickness=0, bg=transparent_color)
     canvas.pack()
 
     x = -1000
     base_y = screen_height // 2
-
+    angle = 0.0
     text = canvas.create_text(
-        x, base_y,
+        x,
+        base_y,
         text=emoji,
         font=("Segoe UI Emoji", FONT_SIZE),
         anchor="w",
         fill=color
     )
-
-    root.update()
-
-    angle = 0.0
 
     def animate():
         nonlocal x, angle
@@ -73,16 +75,19 @@ def loop():
         emoji = EMOJI
         color = COLOR
         if random.randint(1, 100) == 1:
-            emoji = RARE_EMOIJ
+            emoji = RARE_EMOJI
             color = RARE_COLOR
-        print(f"[{datetime.now().strftime('%H:%M')}] " + emoji)
+        print(f"[{datetime.now().strftime('%H:%M')}] {emoji}")
         show_emoji(emoji, color)
         print(f"[{datetime.now().strftime('%H:%M')}] Zzz.z...")
         time.sleep(INTERVAL_MINUTES * 60)
 
-# Run in background thread so it doesn't block
-threading.Thread(target=loop, daemon=True).start()
+icon = pystray.Icon(
+    "Shrimpy",
+    create_tray_icon(),
+    "Shrimpy",
+    menu=pystray.Menu(item("Quit", lambda icon: icon.stop()))
+)
 
-# Keep app alive (invisible root)
-while True:
-    time.sleep(1)
+threading.Thread(target=loop, daemon=True).start()
+icon.run()
