@@ -2,6 +2,7 @@ from datetime import datetime
 import tkinter as tk
 import time
 import threading
+import math
 import random
 
 # ===== CONFIG =====
@@ -12,6 +13,8 @@ SPEED_IN_PIXELS = 5
 FONT_SIZE = 600
 COLOR = "pink"
 RARE_COLOR = "orange"
+BOB_AMPLITUDE = 200
+BOB_SPEED = 0.1
 
 # ==================
 
@@ -36,10 +39,10 @@ def show_emoji(emoji, color):
     canvas.pack()
 
     x = -1000
-    y = screen_height // 2
+    base_y = screen_height // 2
 
     text = canvas.create_text(
-        x, y,
+        x, base_y,
         text=emoji,
         font=("Segoe UI Emoji", FONT_SIZE),
         anchor="w",
@@ -48,10 +51,14 @@ def show_emoji(emoji, color):
 
     root.update()
 
+    angle = 0.0
+
     def animate():
-        nonlocal x
+        nonlocal x, angle
         x += SPEED_IN_PIXELS
-        canvas.coords(text, x, y)
+        current_y = base_y + int(BOB_AMPLITUDE * math.sin(angle))
+        angle += BOB_SPEED
+        canvas.coords(text, x, current_y)
 
         if x < screen_width + 200:
             root.after(16, animate)
